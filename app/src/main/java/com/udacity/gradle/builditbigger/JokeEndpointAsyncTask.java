@@ -8,13 +8,15 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+import com.udacity.gradle.builditbigger.backend.myApi.model.JokeData;
 
 import java.io.IOException;
 
-public class JokeEndpointAsyncTask extends AsyncTask<Void, Void, Joke> {
+public class JokeEndpointAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private static MyApi myApiService = null;
     private JokeEndpointCallbackHandler jokeEndpointCallbackHandler;
+    private Joke joke;
 
     public JokeEndpointAsyncTask(JokeEndpointCallbackHandler callbackHandler) {
         jokeEndpointCallbackHandler = callbackHandler;
@@ -26,7 +28,7 @@ public class JokeEndpointAsyncTask extends AsyncTask<Void, Void, Joke> {
     * as recommended by Udacity in the preparation materials for this project.
     * */
     @Override
-    protected Joke doInBackground(Void... voids) {
+    protected Void doInBackground(Void... voids) {
 
         if (myApiService == null) {
             MyApi.Builder builder = new MyApi.Builder(
@@ -46,15 +48,16 @@ public class JokeEndpointAsyncTask extends AsyncTask<Void, Void, Joke> {
         }
 
         try {
-            return new Joke(myApiService.getJoke().execute().getJokeSetup(), myApiService.getJoke().execute().getJokePunchline());
+            JokeData jokeData = myApiService.getJoke().execute();
+            joke = new Joke(jokeData.getJokeSetup(), jokeData.getJokePunchline());
         } catch (IOException e) {
-            return new Joke("Exceptions are not funny.", e.getMessage());
+            joke = new Joke("Exceptions are not funny.", e.getMessage());
         }
-
+        return null;
     }
 
     @Override
-    protected void onPostExecute(Joke joke) {
-        jokeEndpointCallbackHandler.onTaskComplete(joke);
+    protected void onPostExecute(Void theVoid) {
+        jokeEndpointCallbackHandler.onTaskComplete(this.joke);
     }
 }
