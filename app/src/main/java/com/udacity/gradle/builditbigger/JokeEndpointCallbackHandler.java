@@ -1,5 +1,7 @@
 package com.udacity.gradle.builditbigger;
 
+import com.example.jokelibrary.Joke;
+
 public interface JokeEndpointCallbackHandler {
-    void onTaskComplete(String data);
+    void onTaskComplete(Joke joke);
 }

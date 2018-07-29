@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.jokeactivity.DisplayJokeActivity;
+import com.example.jokelibrary.Joke;
 
 
 public class MainActivity extends AppCompatActivity implements JokeEndpointCallbackHandler {
@@ -43,22 +44,15 @@ public class MainActivity extends AppCompatActivity implements JokeEndpointCallb
     }
 
     public void tellJoke(View view) {
-//        Joke joke = (new Joker()).getJoke();
-//        //Toast.makeText(this, joke.getJoke(), Toast.LENGTH_LONG).show();
-//        Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
-//        jokeDisplayIntent.putExtra("setup", joke.getSetup());
-//        jokeDisplayIntent.putExtra("punchline", joke.getPunchLine());
-//        startActivity(jokeDisplayIntent);
-
         new JokeEndpointAsyncTask(this).execute();
     }
 
 
     @Override
-    public void onTaskComplete(String data) {
+    public void onTaskComplete(Joke joke) {
         Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
-        jokeDisplayIntent.putExtra("setup", data);
-        jokeDisplayIntent.putExtra("punchline", data);
+        jokeDisplayIntent.putExtra("setup", joke.getSetup());
+        jokeDisplayIntent.putExtra("punchline", joke.getPunchLine());
         startActivity(jokeDisplayIntent);
     }
 }
