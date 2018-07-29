@@ -9,10 +9,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.jokeactivity.DisplayJokeActivity;
-import com.example.jokelibrary.*;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements JokeEndpointCallbackHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +43,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        Joke joke = (new Joker()).getJoke();
-        //Toast.makeText(this, joke.getJoke(), Toast.LENGTH_LONG).show();
-        Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
-        jokeDisplayIntent.putExtra("setup", joke.getSetup());
-        jokeDisplayIntent.putExtra("punchline", joke.getPunchLine());
-        startActivity(jokeDisplayIntent);
+//        Joke joke = (new Joker()).getJoke();
+//        //Toast.makeText(this, joke.getJoke(), Toast.LENGTH_LONG).show();
+//        Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
+//        jokeDisplayIntent.putExtra("setup", joke.getSetup());
+//        jokeDisplayIntent.putExtra("punchline", joke.getPunchLine());
+//        startActivity(jokeDisplayIntent);
+
+        new JokeEndpointAsyncTask(this).execute();
     }
 
 
+    @Override
+    public void onTaskComplete(String data) {
+        Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
+        jokeDisplayIntent.putExtra("setup", data);
+        jokeDisplayIntent.putExtra("punchline", data);
+        startActivity(jokeDisplayIntent);
+    }
 }
