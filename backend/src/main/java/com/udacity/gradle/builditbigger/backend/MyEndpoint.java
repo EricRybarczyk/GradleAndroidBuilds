@@ -26,6 +26,13 @@ public class MyEndpoint {
         response.setJokeSetup(joke.getSetup());
         response.setJokePunchline(joke.getPunchLine());
 
+        // Thread.sleep() is only here to make sure we always see the spinner ProgressBar in the Android client app.
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 

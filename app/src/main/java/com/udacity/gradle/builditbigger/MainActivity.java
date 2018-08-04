@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.jokeactivity.DisplayJokeActivity;
@@ -14,10 +16,15 @@ import com.example.jokelibrary.Joke;
 
 public class MainActivity extends AppCompatActivity implements JokeEndpointCallbackHandler {
 
+    private ProgressBar spinner;
+    private Button jokeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        spinner = findViewById(R.id.progressSpinner);
+        jokeButton = findViewById(R.id.getJokeButton);
     }
 
 
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements JokeEndpointCallb
     }
 
     public void tellJoke(View view) {
+        setWorkingIndicators(true);
         new JokeEndpointAsyncTask(this).execute();
     }
 
@@ -53,6 +61,17 @@ public class MainActivity extends AppCompatActivity implements JokeEndpointCallb
         Intent jokeDisplayIntent = new Intent(this, DisplayJokeActivity.class);
         jokeDisplayIntent.putExtra("setup", joke.getSetup());
         jokeDisplayIntent.putExtra("punchline", joke.getPunchLine());
+        setWorkingIndicators(false);
         startActivity(jokeDisplayIntent);
+    }
+
+    private void setWorkingIndicators(boolean workIsInProcess) {
+        if (workIsInProcess) {
+            spinner.setVisibility(View.VISIBLE);
+            jokeButton.setEnabled(false);
+        } else {
+            spinner.setVisibility(View.INVISIBLE);
+            jokeButton.setEnabled(true);
+        }
     }
 }
