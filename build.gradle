@@ -20,3 +20,16 @@ allprojects {
         google()
     }
 }
+
+// THIS TECHNIQUE WORKED! Approach using finalizedBy instead of doLast.
+// AppEngine is stopped but there is no output to terminal to indicate the end task was called.
+task runTestsWithGCE(type: GradleBuild) {
+    description "Launch local GCE server, run tests, stop local GCE server"
+    group "verification"
+    dependsOn ':backend:appengineStart'
+    tasks = [
+            'app:connectedFreeDebugAndroidTest',
+            'app:connectedPaidDebugAndroidTest'
+    ]
+    finalizedBy ':backend:appengineStop'
+}
