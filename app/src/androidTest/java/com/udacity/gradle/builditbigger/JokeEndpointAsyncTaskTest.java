@@ -29,6 +29,8 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class JokeEndpointAsyncTaskTest {
 
+    private static final String EXCEPTION_MESSAGE_TEXT = "Exceptions are not funny.";
+
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -57,7 +59,8 @@ public class JokeEndpointAsyncTaskTest {
                                         0),
                                 0),
                         isDisplayed()));
-        jokeSetupText.check(matches(not(withText(""))));
+        // verify text is not the exception message in addition to non-empty
+        jokeSetupText.check(matches(not(withText("")))).check(matches(not(withText(EXCEPTION_MESSAGE_TEXT))));
 
         ViewInteraction jokePunchlineText = onView(
                 allOf(withId(R.id.joke_punchline_text),
